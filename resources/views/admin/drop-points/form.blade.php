@@ -1,0 +1,10 @@
+@extends('layouts.admin')
+@section('title',$isEdit ? 'Edit Lokasi' : 'Tambah Lokasi')
+@section('breadcrumb','Lokasi Drop Point')
+@section('content')
+<div class="page-heading"><div><div class="eyebrow">P-02 · MANAJEMEN LOKASI</div><h1>{{ $isEdit ? 'Edit lokasi drop point' : 'Tambah lokasi drop point' }}</h1><p>{{ $isEdit ? 'Perbarui informasi dan status lokasi.' : 'Masukkan informasi titik setor baru.' }}</p></div><a class="btn btn-outline" href="{{ $isEdit ? route('admin.drop-points.show',$dropPoint) : route('admin.drop-points.index') }}">← Kembali</a></div>
+<div class="panel" style="padding:22px;max-width:850px"><form method="POST" action="{{ $isEdit ? route('admin.drop-points.update',$dropPoint) : route('admin.drop-points.store') }}">@csrf @if($isEdit)@method('PUT')@endif
+<div class="form-grid"><label class="form-field full">Nama lokasi<input name="nama" value="{{ old('nama',$dropPoint->nama) }}" required maxlength="100" placeholder="Contoh: Drop Point RW 05">@error('nama')<small class="field-error">{{ $message }}</small>@enderror</label><label class="form-field full">Alamat<textarea name="alamat" required maxlength="500" placeholder="Alamat lengkap titik setor">{{ old('alamat',$dropPoint->alamat) }}</textarea>@error('alamat')<small class="field-error">{{ $message }}</small>@enderror</label><label class="form-field full">Jam buka<input name="jam_buka" value="{{ old('jam_buka',$dropPoint->jam_buka) }}" required maxlength="100" placeholder="Contoh: Senin–Sabtu, 08.00–16.00 WIB">@error('jam_buka')<small class="field-error">{{ $message }}</small>@enderror</label>
+@if($isEdit)<label class="form-field">Status lokasi<select name="status_aktif"><option value="1" @selected(old('status_aktif',(int)$dropPoint->status_aktif) == 1)>Aktif</option><option value="0" @selected(old('status_aktif',(int)$dropPoint->status_aktif) == 0)>Nonaktif</option></select></label>@endif
+</div><div class="modal-actions"><a class="btn btn-outline" href="{{ $isEdit ? route('admin.drop-points.show',$dropPoint) : route('admin.drop-points.index') }}">Batal</a><button class="btn btn-primary" type="submit">Simpan lokasi</button></div></form></div>
+@endsection
