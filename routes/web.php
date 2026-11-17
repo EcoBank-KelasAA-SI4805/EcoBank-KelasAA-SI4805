@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\DropPointController;
+use App\Http\Controllers\JenisResiduController;
+use App\Http\Controllers\ResiduController;
 
 Route::view('/', 'admin.dashboard')->name('dashboard');
 
@@ -29,3 +31,7 @@ Route::view('/admin/transactions', 'admin.placeholder', [
 Route::view('/admin/reports', 'admin.placeholder', [
     'pageTitle' => 'Laporan'
 ])->name('admin.reports');
+
+// Modul Jenis Residu & Pencatatan Residu
+Route::resource('jenis-residu', JenisResiduController::class);
+Route::resource('residu', ResiduController::class);
