@@ -1,51 +1,48 @@
-@extends('layouts.app')
-
-@section('title', 'Detail Jenis Residu')
+@extends('layouts.admin')
+@section('title', 'Detail Jenis Residu · ' . $jenisResidu->nama)
+@section('breadcrumb', 'Jenis Residu / ' . $jenisResidu->nama)
 
 @section('content')
-<div class="mb-3">
-    <a href="{{ route('jenis-residu.index') }}" class="text-decoration-none text-secondary">
-        <i class="bi bi-arrow-left me-1"></i>Kembali ke Daftar
-    </a>
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">P-05 · MASTER DATA RESIDU</div>
+        <h1>{{ $jenisResidu->nama }}</h1>
+        <p>Detail klasifikasi dan tarif biaya penanganan residu.</p>
+    </div>
+    <div class="heading-actions">
+        <a class="btn btn-outline" href="{{ route('jenis-residu.index') }}">← Daftar Jenis Residu</a>
+        <a class="btn btn-primary" href="{{ route('jenis-residu.edit', $jenisResidu) }}">Edit Jenis Residu</a>
+    </div>
 </div>
 
-<div class="card shadow-sm" style="max-width: 640px;">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0"><i class="bi bi-info-circle me-2 text-info"></i>Detail Jenis Residu</h5>
-        <a href="{{ route('jenis-residu.edit', $jenisResidu) }}" class="btn btn-sm btn-outline-primary">
-            <i class="bi bi-pencil me-1"></i>Edit
-        </a>
-    </div>
-    <div class="card-body">
-        <dl class="row mb-0">
-            <dt class="col-sm-4">Nama</dt>
-            <dd class="col-sm-8">{{ $jenisResidu->nama }}</dd>
-
-            <dt class="col-sm-4">Cara Penanganan</dt>
-            <dd class="col-sm-8">
-                @php
-                    $badgeClass = match($jenisResidu->cara_penanganan) {
-                        'TPA' => 'bg-secondary',
-                        'insinerasi' => 'bg-danger',
-                        'lainnya' => 'bg-warning text-dark',
-                        default => 'bg-secondary'
-                    };
-                @endphp
-                <span class="badge {{ $badgeClass }}">{{ $jenisResidu->cara_penanganan }}</span>
-            </dd>
-
-            <dt class="col-sm-4">Biaya/kg</dt>
-            <dd class="col-sm-8">Rp {{ number_format($jenisResidu->biaya_per_kg, 0, ',', '.') }}</dd>
-
-            <dt class="col-sm-4">Alasan</dt>
-            <dd class="col-sm-8">{{ $jenisResidu->alasan }}</dd>
-
-            <dt class="col-sm-4">Dibuat</dt>
-            <dd class="col-sm-8">{{ $jenisResidu->created_at->format('d/m/Y H:i') }}</dd>
-
-            <dt class="col-sm-4">Diperbarui</dt>
-            <dd class="col-sm-8">{{ $jenisResidu->updated_at->format('d/m/Y H:i') }}</dd>
-        </dl>
+<div class="panel" style="max-width: 800px;">
+    <div class="detail-grid">
+        <div class="detail-item">
+            <small>NAMA RESIDU</small>
+            <strong style="font-size: 16px;">{{ $jenisResidu->nama }}</strong>
+        </div>
+        <div class="detail-item">
+            <small>CARA PENANGANAN</small>
+            <div>
+                <span class="type-pill {{ $jenisResidu->cara_penanganan === 'TPA' ? 'deposit-type' : 'withdraw-type' }}">
+                    {{ ucfirst($jenisResidu->cara_penanganan) }}
+                </span>
+            </div>
+        </div>
+        <div class="detail-item">
+            <small>BIAYA PENANGANAN PER KG</small>
+            <strong style="color: #16865b; font-size: 16px;">Rp {{ number_format($jenisResidu->biaya_per_kg, 0, ',', '.') }}</strong>
+        </div>
+        <div class="detail-item">
+            <small>DITAMBAHKAN PADA</small>
+            <strong>{{ $jenisResidu->created_at ? $jenisResidu->created_at->format('d M Y, H:i') : '-' }}</strong>
+        </div>
+        <div class="detail-item" style="grid-column: 1 / -1;">
+            <small>ALASAN TIDAK LAYAK DAUR ULANG</small>
+            <p style="margin: 6px 0 0; color: #475569; font-size: 13px; line-height: 1.6;">
+                {{ $jenisResidu->alasan }}
+            </p>
+        </div>
     </div>
 </div>
 @endsection

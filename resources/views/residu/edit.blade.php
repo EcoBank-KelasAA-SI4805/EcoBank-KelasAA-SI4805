@@ -1,30 +1,26 @@
-@extends('layouts.app')
-
-@section('title', 'Edit Residu')
+@extends('layouts.admin')
+@section('title', 'Edit Data Residu')
+@section('breadcrumb', 'Pencatatan Residu / Edit')
 
 @section('content')
-<div class="mb-3">
-    <a href="{{ route('residu.index') }}" class="text-decoration-none text-secondary">
-        <i class="bi bi-arrow-left me-1"></i>Kembali ke Daftar
-    </a>
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">P-06 · OPERASIONAL RESIDU</div>
+        <h1>Edit Data Residu</h1>
+        <p>Perbarui informasi berat, jenis residu, atau status penanganan.</p>
+    </div>
+    <a class="btn btn-outline" href="{{ route('residu.show', $residu) }}">← Kembali</a>
 </div>
 
-<div class="card shadow-sm" style="max-width: 680px;">
-    <div class="card-header bg-primary text-white">
-        <h5 class="mb-0"><i class="bi bi-pencil me-2"></i>Edit Data Residu</h5>
-    </div>
-    <div class="card-body">
-        <form action="{{ route('residu.update', $residu) }}" method="POST">
-            @method('PUT')
-            @include('residu._form')
-            <div class="d-flex gap-2 mt-4">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-check-lg me-1"></i>Perbarui
-                </button>
-                <a href="{{ route('residu.index') }}" class="btn btn-outline-secondary">Batal</a>
-            </div>
-        </form>
-    </div>
+<div class="panel" style="padding: 24px; max-width: 800px;">
+    <form action="{{ route('residu.update', $residu) }}" method="POST">
+        @method('PUT')
+        @include('residu._form')
+        <div class="modal-actions" style="margin-top: 24px;">
+            <a href="{{ route('residu.show', $residu) }}" class="btn btn-outline">Batal</a>
+            <button type="submit" class="btn btn-primary">Perbarui Data Residu</button>
+        </div>
+    </form>
 </div>
 @endsection
 
@@ -36,8 +32,10 @@ function hitungPreview() {
     const previewDiv = document.getElementById('preview-total');
     const previewNilai = document.getElementById('preview-nilai');
 
+    if (!selectJenis || !inputBerat || !previewDiv || !previewNilai) return;
+
     const selectedOption = selectJenis.options[selectJenis.selectedIndex];
-    const biaya = parseFloat(selectedOption.dataset.biaya || 0);
+    const biaya = parseFloat(selectedOption?.dataset?.biaya || 0);
     const berat = parseFloat(inputBerat.value || 0);
 
     if (biaya > 0 && berat > 0) {
@@ -48,10 +46,6 @@ function hitungPreview() {
         previewDiv.style.display = 'none';
     }
 }
-
-document.getElementById('id_jenis_residu').addEventListener('change', hitungPreview);
-document.getElementById('berat_kg').addEventListener('input', hitungPreview);
-// Trigger on load to show current value
-window.addEventListener('load', hitungPreview);
+document.addEventListener('DOMContentLoaded', hitungPreview);
 </script>
 @endpush

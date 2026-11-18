@@ -1,28 +1,24 @@
-@extends('layouts.app')
-
+@extends('layouts.admin')
 @section('title', 'Tambah Jenis Residu')
+@section('breadcrumb', 'Jenis Residu / Tambah')
 
 @section('content')
-<div class="mb-3">
-    <a href="{{ route('jenis-residu.index') }}" class="text-decoration-none text-secondary">
-        <i class="bi bi-arrow-left me-1"></i>Kembali ke Daftar
-    </a>
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">P-05 · MASTER DATA RESIDU</div>
+        <h1>Tambah Jenis Residu</h1>
+        <p>Klasifikasikan jenis sampah residu baru yang masuk ke bank sampah.</p>
+    </div>
+    <a class="btn btn-outline" href="{{ route('jenis-residu.index') }}">← Kembali ke Daftar</a>
 </div>
 
-<div class="card shadow-sm" style="max-width: 640px;">
-    <div class="card-header bg-success text-white">
-        <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Tambah Jenis Residu</h5>
-    </div>
-    <div class="card-body">
-        <form action="{{ route('jenis-residu.store') }}" method="POST">
-            @include('jenis_residu._form')
-            <div class="d-flex gap-2 mt-4">
-                <button type="submit" class="btn btn-success">
-                    <i class="bi bi-check-lg me-1"></i>Simpan
-                </button>
-                <a href="{{ route('jenis-residu.index') }}" class="btn btn-outline-secondary">Batal</a>
-            </div>
-        </form>
-    </div>
+<div class="panel" style="padding: 24px; max-width: 760px;">
+    <form action="{{ route('jenis-residu.store') }}" method="POST">
+        @include('jenis_residu._form')
+        <div class="modal-actions" style="margin-top: 24px;">
+            <a href="{{ route('jenis-residu.index') }}" class="btn btn-outline">Batal</a>
+            <button type="submit" class="btn btn-primary">Simpan Jenis Residu</button>
+        </div>
+    </form>
 </div>
 @endsection

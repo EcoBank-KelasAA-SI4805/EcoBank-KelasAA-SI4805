@@ -1,60 +1,70 @@
-@extends('layouts.app')
-
-@section('title', 'Detail Residu')
+@extends('layouts.admin')
+@section('title', 'Detail Catatan Residu · ' . ($residu->jenisResidu->nama ?? 'Residu'))
+@section('breadcrumb', 'Pencatatan Residu / Detail')
 
 @section('content')
-<div class="mb-3">
-    <a href="{{ route('residu.index') }}" class="text-decoration-none text-secondary">
-        <i class="bi bi-arrow-left me-1"></i>Kembali ke Daftar
-    </a>
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">P-06 · OPERASIONAL RESIDU</div>
+        <h1>Detail Catatan Residu</h1>
+        <p>Rincian data sampah residu yang disetorkan dan total biaya penanganan.</p>
+    </div>
+    <div class="heading-actions">
+        <a class="btn btn-outline" href="{{ route('residu.index') }}">← Daftar Residu</a>
+        <a class="btn btn-primary" href="{{ route('residu.edit', $residu) }}">Edit Catatan</a>
+    </div>
 </div>
 
-<div class="card shadow-sm" style="max-width: 640px;">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0"><i class="bi bi-info-circle me-2 text-info"></i>Detail Residu</h5>
-        <a href="{{ route('residu.edit', $residu) }}" class="btn btn-sm btn-outline-primary">
-            <i class="bi bi-pencil me-1"></i>Edit
-        </a>
-    </div>
-    <div class="card-body">
-        <dl class="row mb-0">
-            <dt class="col-sm-5">Tanggal</dt>
-            <dd class="col-sm-7">{{ $residu->tanggal->format('d/m/Y') }}</dd>
-
-            <dt class="col-sm-5">Jenis Residu</dt>
-            <dd class="col-sm-7">{{ $residu->jenisResidu->nama ?? '-' }}</dd>
-
-            <dt class="col-sm-5">Asal</dt>
-            <dd class="col-sm-7">{{ $residu->asal }}</dd>
-
-            <dt class="col-sm-5">Berat</dt>
-            <dd class="col-sm-7">{{ number_format($residu->berat_kg, 2, ',', '.') }} kg</dd>
-
-            <dt class="col-sm-5">Biaya/kg (saat dicatat)</dt>
-            <dd class="col-sm-7">Rp {{ number_format($residu->biaya_per_kg, 0, ',', '.') }}</dd>
-
-            <dt class="col-sm-5">Total Biaya</dt>
-            <dd class="col-sm-7"><strong>Rp {{ number_format($residu->total_biaya, 0, ',', '.') }}</strong></dd>
-
-            <dt class="col-sm-5">Status</dt>
-            <dd class="col-sm-7">
+<div class="panel" style="max-width: 800px;">
+    <div class="detail-grid">
+        <div class="detail-item">
+            <small>TANGGAL PENIMBANGAN</small>
+            <strong style="font-size: 15px;">{{ $residu->tanggal ? $residu->tanggal->format('d M Y') : '-' }}</strong>
+        </div>
+        <div class="detail-item">
+            <small>STATUS PENANGANAN</small>
+            <div>
                 @php
-                    $statusClass = match($residu->status) {
-                        'ditampung' => 'bg-primary',
-                        'diangkut'  => 'bg-warning text-dark',
-                        'dibuang'   => 'bg-secondary',
-                        default     => 'bg-light text-dark',
+                    $statusStyle = match($residu->status) {
+                        'ditampung' => 'background:#eaf2ff; color:#3b82f6;',
+                        'diangkut'  => 'background:#fff6e8; color:#d97706;',
+                        'dibuang'   => 'background:#f1f5f9; color:#475569;',
+                        default     => 'background:#f1f5f9; color:#475569;',
                     };
                 @endphp
-                <span class="badge {{ $statusClass }}">{{ ucfirst($residu->status) }}</span>
-            </dd>
-
-            <dt class="col-sm-5">Dicatat</dt>
-            <dd class="col-sm-7">{{ $residu->created_at->format('d/m/Y H:i') }}</dd>
-
-            <dt class="col-sm-5">Diperbarui</dt>
-            <dd class="col-sm-7">{{ $residu->updated_at->format('d/m/Y H:i') }}</dd>
-        </dl>
+                <span class="type-pill" style="{{ $statusStyle }} font-weight: 700;">
+                    {{ ucfirst($residu->status) }}
+                </span>
+            </div>
+        </div>
+        <div class="detail-item">
+            <small>JENIS RESIDU</small>
+            <strong style="font-size: 15px;">{{ $residu->jenisResidu->nama ?? '-' }}</strong>
+        </div>
+        <div class="detail-item">
+            <small>ASAL SAMPAH (WILAYAH)</small>
+            <strong>{{ $residu->asal }}</strong>
+        </div>
+        <div class="detail-item">
+            <small>BERAT TERTIMBANG</small>
+            <strong style="font-size: 16px;">{{ number_format($residu->berat_kg, 2, ',', '.') }} kg</strong>
+        </div>
+        <div class="detail-item">
+            <small>TARIF BIAYA PER KG</small>
+            <strong>Rp {{ number_format($residu->biaya_per_kg, 0, ',', '.') }}</strong>
+        </div>
+        <div class="detail-item" style="grid-column: 1 / -1; background: #f8fafc; padding: 14px 18px; border-radius: 10px; border: 1px solid #e2e8f0;">
+            <small style="font-weight: 700; color: #64748b;">TOTAL BIAYA PENANGANAN</small>
+            <strong style="color: #16865b; font-size: 22px; display: block; margin-top: 4px;">Rp {{ number_format($residu->total_biaya, 0, ',', '.') }}</strong>
+        </div>
+        <div class="detail-item">
+            <small>DICATAT PADA</small>
+            <strong>{{ $residu->created_at ? $residu->created_at->format('d M Y, H:i') : '-' }}</strong>
+        </div>
+        <div class="detail-item">
+            <small>TERAKHIR DIPERBARUI</small>
+            <strong>{{ $residu->updated_at ? $residu->updated_at->format('d M Y, H:i') : '-' }}</strong>
+        </div>
     </div>
 </div>
 @endsection
