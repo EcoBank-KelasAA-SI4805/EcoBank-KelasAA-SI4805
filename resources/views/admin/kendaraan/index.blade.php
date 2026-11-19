@@ -1,0 +1,8 @@
+@extends('layouts.admin')
+@section('title','Kendaraan Pengangkut')
+@section('breadcrumb','Kendaraan Pengangkut')
+@section('content')
+<div class="page-heading"><div><div class="eyebrow">DATA MASTER · ECOBANK</div><h1>Kendaraan Pengangkut</h1><p>Kelola data kendaraan pengangkut EcoBank.</p></div><a class="btn btn-primary" href="{{ route('admin.kendaraan.create') }}">+ Tambah Kendaraan Pengangkut</a></div>
+<div class="panel"><div class="data-toolbar"><div><h3>Daftar Kendaraan Pengangkut</h3><p>{{ $kendaraans->total() }} data terdaftar</p></div><form class="toolbar-actions" method="GET"><input class="data-search" name="q" value="{{ $q }}" placeholder="Cari data..."><button class="btn btn-outline">Cari</button></form></div>
+<div class="table-scroll"><table><thead><tr><th>NAMA KENDARAAN</th><th>NOMOR POLISI</th><th>JENIS KENDARAAN</th><th>STATUS</th><th>AKSI</th></tr></thead><tbody>@forelse($kendaraans as $item)<tr><td>{{ $item->nama }}</td><td>{{ $item->nomor_polisi }}</td><td>{{ $item->jenis }}</td><td><span class="status {{ $item->status === 'tersedia' ? 'success' : 'inactive' }}">{{ ucfirst($item->status) }}</span></td><td><div class="action-group"><a class="act-btn view" href="{{ route('admin.kendaraan.show',$item) }}">Detail</a><a class="act-btn edit" href="{{ route('admin.kendaraan.edit',$item) }}">Edit</a><form method="POST" action="{{ route('admin.kendaraan.destroy',$item) }}" onsubmit="return confirm('Hapus data ini?')">@csrf @method('DELETE')<button class="act-btn delete">Hapus</button></form></div></td></tr>@empty<tr><td colspan="5" class="empty-table">Belum ada data.</td></tr>@endforelse</tbody></table></div><div class="table-bottom">{{ $kendaraans->links() }}</div></div>
+@endsection
