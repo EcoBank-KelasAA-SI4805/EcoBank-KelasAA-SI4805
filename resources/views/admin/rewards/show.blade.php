@@ -18,6 +18,9 @@
 @if(session('success'))
     <div class="flash success">{{ session('success') }}</div>
 @endif
+@if(session('error'))
+    <div class="flash error">{{ session('error') }}</div>
+@endif
 
 <div class="panel">
     <div class="detail-grid">
@@ -26,20 +29,26 @@
             <strong>{{ $reward->nama_reward }}</strong>
         </div>
         <div class="detail-item">
-            <small>STATUS REWARD</small>
-            <strong>{{ $reward->status_aktif ? 'Aktif' : 'Nonaktif' }}</strong>
+            <small>STATUS</small>
+            <span class="status {{ $reward->status_aktif ? 'success' : 'inactive' }}" style="margin-top:4px;display:inline-flex;">
+                {{ $reward->status_aktif ? 'Aktif' : 'Nonaktif' }}
+            </span>
         </div>
         <div class="detail-item">
             <small>POIN DIBUTUHKAN</small>
-            <strong>{{ number_format($reward->poin_harga, 0, ',', '.') }} Poin</strong>
+            <strong>{{ number_format($reward->poin_harga, 0, ',', '.') }} poin</strong>
         </div>
         <div class="detail-item">
             <small>SISA STOK</small>
-            <strong>{{ $reward->stok }} Unit</strong>
+            @if($reward->stok > 0)
+                <strong style="color:#065f46;">{{ $reward->stok }} unit</strong>
+            @else
+                <strong style="color:#be123c;">Habis</strong>
+            @endif
         </div>
-        <div class="detail-item" style="grid-column: span 2;">
+        <div class="detail-item detail-full">
             <small>DESKRIPSI</small>
-            <p style="margin-top:4px;color:#374151;line-height:1.5;">{{ $reward->deskripsi ?: 'Tidak ada deskripsi tambahan.' }}</p>
+            <p>{{ $reward->deskripsi ?: 'Tidak ada deskripsi tambahan.' }}</p>
         </div>
         <div class="detail-item">
             <small>DITAMBAHKAN PADA</small>
