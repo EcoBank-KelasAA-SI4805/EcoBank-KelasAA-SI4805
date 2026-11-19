@@ -15,4 +15,9 @@ class Nasabah extends Model
     {
         return $this->hasMany(Transaction::class, 'nasabah_id');
     }
+
+    public function penarikanSaldo(): HasMany
+    {
+        return $this->hasMany(PenarikanSaldo::class, 'nasabah_id');
+    }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\DropPointController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\MetodePenarikanController;
+use App\Http\Controllers\PenarikanSaldoController;
 
 Route::view('/', 'admin.dashboard')->name('dashboard');
 
@@ -29,6 +30,10 @@ Route::resource('/admin/rewards', RewardController::class)
 // P-12 CRUD Metode Penarikan (Gracia Gebriella Sianturi)
 Route::resource('/admin/metode-penarikan', MetodePenarikanController::class)
     ->names('admin.metode-penarikan');
+
+// P-16 CRUD Penarikan Saldo (Gracia Gebriella Sianturi)
+Route::resource('/admin/penarikan-saldo', PenarikanSaldoController::class)
+    ->names('admin.penarikan-saldo');
 
 // Transaksi
 Route::view('/admin/transactions', 'admin.placeholder', [
