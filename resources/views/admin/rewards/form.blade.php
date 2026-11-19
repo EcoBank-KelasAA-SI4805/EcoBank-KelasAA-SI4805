@@ -2,6 +2,10 @@
 @section('title', $isEdit ? 'Edit Reward' : 'Tambah Reward')
 @section('breadcrumb', 'Katalog Reward')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/gracia_p11_p12.css') }}">
+@endpush
+
 @section('content')
 <div class="page-heading">
     <div>

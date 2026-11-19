@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/ecobank.css') }}">
+    @stack('styles')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -21,8 +22,6 @@
         <div class="side-label">MENU UTAMA</div>
         <nav class="side-nav">
             <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') || request()->path() === '/' ? 'active' : '' }}"><span class="nav-icon">▦</span>Dashboard</a>
-            <a href="{{ route('admin.nasabah.index') }}" class="{{ request()->routeIs('admin.nasabah.*') ? 'active' : '' }}"><span class="nav-icon">♟</span>Data Nasabah</a>
-            <a href="{{ route('admin.drop-points.index') }}" class="{{ request()->routeIs('admin.drop-points.*') ? 'active' : '' }}"><span class="nav-icon">⌖</span>Drop Point</a>
             <a href="{{ route('admin.rewards.index') }}" class="{{ request()->routeIs('admin.rewards.*') ? 'active' : '' }}"><span class="nav-icon">✦</span>Katalog Reward</a>
             <a href="{{ route('admin.metode-penarikan.index') }}" class="{{ request()->routeIs('admin.metode-penarikan.*') ? 'active' : '' }}"><span class="nav-icon">▭</span>Metode Penarikan</a>
             <a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users') ? 'active' : '' }}"><span class="nav-icon">♙</span>Kelola Pengguna</a>

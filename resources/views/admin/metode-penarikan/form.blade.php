@@ -2,6 +2,10 @@
 @section('title', $isEdit ? 'Edit Metode Penarikan' : 'Tambah Metode Penarikan')
 @section('breadcrumb', 'Metode Penarikan')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/gracia_p11_p12.css') }}">
+@endpush
+
 @section('content')
 <div class="page-heading">
     <div>
