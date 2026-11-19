@@ -9,7 +9,6 @@
 @section('content')
 <div class="page-heading">
     <div>
-        <div class="eyebrow">P-16 • PENARIKAN SALDO</div>
         <h1>Penarikan Saldo</h1>
         <p>Kelola pengajuan penarikan saldo tabungan nasabah.</p>
     </div>
@@ -78,7 +77,7 @@
                                 @endif
                                 @if($item->bisaDibatalkan())
                                     <form method="POST" action="{{ route('admin.penarikan-saldo.destroy', $item) }}"
-                                          onsubmit="return confirm('Batalkan pengajuan penarikan Rp {{ number_format($item->jumlah, 0, ',', '.') }}?')">
+                                          data-gracia-confirm="Batalkan pengajuan penarikan Rp {{ number_format($item->jumlah, 0, ',', '.') }}?">
                                         @csrf
                                         @method('DELETE')
                                         <button class="action-btn delete" type="submit">Batalkan</button>
@@ -101,3 +100,7 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/gracia_p11_p12.js') }}"></script>
+@endpush

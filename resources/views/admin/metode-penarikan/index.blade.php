@@ -9,11 +9,10 @@
 @section('content')
 <div class="page-heading">
     <div>
-        <div class="eyebrow">P-12 • METODE PENARIKAN</div>
         <h1>Metode Penarikan</h1>
-        <p>Kelola jalur pencairan saldo tabungan nasabah (Transfer Bank, E-Wallet, dan Kasir Tunai).</p>
+        <p>Kelola jalur pencairan saldo nasabah.</p>
     </div>
-    <a class="btn btn-primary" href="{{ route('admin.metode-penarikan.create') }}">＋ Tambah metode</a>
+    <a class="btn btn-primary" href="{{ route('admin.metode-penarikan.create') }}">＋ Tambah Metode</a>
 </div>
 
 @if(session('success'))
@@ -26,11 +25,11 @@
 <div class="panel">
     <div class="data-toolbar">
         <div>
-            <h3>Daftar metode penarikan</h3>
+            <h3>Daftar Metode Penarikan</h3>
             <p>{{ $metodeList->total() }} metode terdaftar</p>
         </div>
         <form class="toolbar-actions" method="GET">
-            <input class="data-search" type="search" name="q" value="{{ $q }}" placeholder="Cari nama atau kategori metode...">
+            <input class="data-search" type="search" name="q" value="{{ $q }}" placeholder="Cari nama atau kategori...">
             <button class="btn btn-outline" type="submit">Cari</button>
             @if($q)
                 <a class="btn btn-outline" href="{{ route('admin.metode-penarikan.index') }}">Reset</a>
@@ -42,11 +41,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>NAMA METODE</th>
-                    <th>KATEGORI</th>
-                    <th>MINIMAL TARIK</th>
-                    <th>STATUS</th>
-                    <th class="align-right">AKSI</th>
+                    <th>Nama Metode</th>
+                    <th>Kategori</th>
+                    <th>Minimal Tarik</th>
+                    <th>Status</th>
+                    <th class="align-right">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,16 +54,16 @@
                         <td>
                             <strong>{{ $item->nama_metode }}</strong>
                             @if($item->deskripsi)
-                                <div style="font-size:12px;color:#6b7280;margin-top:2px;">{{ Str::limit($item->deskripsi, 60) }}</div>
+                                <div style="font-size:11px;color:#84918c;margin-top:2px;">{{ Str::limit($item->deskripsi, 60) }}</div>
                             @endif
                         </td>
                         <td>
                             @if($item->kategori === 'transfer')
-                                <span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;background:#eff6ff;color:#1d4ed8;">Transfer Bank</span>
+                                <span class="status info">Transfer Bank</span>
                             @elseif($item->kategori === 'ewallet')
-                                <span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;background:#f5f3ff;color:#6d28d9;">E-Wallet</span>
+                                <span class="status" style="background:#f5f3ff;color:#6d28d9;">E-Wallet</span>
                             @else
-                                <span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;background:#ecfdf5;color:#047857;">Kasir Tunai</span>
+                                <span class="status success">Kasir Tunai</span>
                             @endif
                         </td>
                         <td><strong>Rp {{ number_format($item->minimal_tarik, 0, ',', '.') }}</strong></td>
@@ -77,7 +76,8 @@
                             <div class="row-actions">
                                 <a class="action-btn" href="{{ route('admin.metode-penarikan.show', $item) }}">Detail</a>
                                 <a class="action-btn" href="{{ route('admin.metode-penarikan.edit', $item) }}">Edit</a>
-                                <form method="POST" action="{{ route('admin.metode-penarikan.destroy', $item) }}" onsubmit="return confirm('Hapus metode penarikan {{ addslashes($item->nama_metode) }}?')">
+                                <form method="POST" action="{{ route('admin.metode-penarikan.destroy', $item) }}"
+                                      data-gracia-confirm="Hapus metode {{ addslashes($item->nama_metode) }}?">
                                     @csrf
                                     @method('DELETE')
                                     <button class="action-btn delete" type="submit">Hapus</button>
@@ -99,3 +99,7 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/gracia_p11_p12.js') }}"></script>
+@endpush

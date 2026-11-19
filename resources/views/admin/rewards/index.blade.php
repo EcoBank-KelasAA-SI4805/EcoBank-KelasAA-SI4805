@@ -9,11 +9,10 @@
 @section('content')
 <div class="page-heading">
     <div>
-        <div class="eyebrow">P-11 • REWARD DAN POIN</div>
         <h1>Katalog Reward</h1>
-        <p>Kelola daftar reward dan produk daur ulang yang dapat ditukar oleh nasabah.</p>
+        <p>Kelola daftar reward yang dapat ditukar oleh nasabah.</p>
     </div>
-    <a class="btn btn-primary" href="{{ route('admin.rewards.create') }}">＋ Tambah reward</a>
+    <a class="btn btn-primary" href="{{ route('admin.rewards.create') }}">＋ Tambah Reward</a>
 </div>
 
 @if(session('success'))
@@ -26,11 +25,11 @@
 <div class="panel">
     <div class="data-toolbar">
         <div>
-            <h3>Daftar reward</h3>
+            <h3>Daftar Reward</h3>
             <p>{{ $rewards->total() }} reward terdaftar</p>
         </div>
         <form class="toolbar-actions" method="GET">
-            <input class="data-search" type="search" name="q" value="{{ $q }}" placeholder="Cari nama atau deskripsi reward...">
+            <input class="data-search" type="search" name="q" value="{{ $q }}" placeholder="Cari nama atau deskripsi...">
             <button class="btn btn-outline" type="submit">Cari</button>
             @if($q)
                 <a class="btn btn-outline" href="{{ route('admin.rewards.index') }}">Reset</a>
@@ -42,11 +41,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>NAMA REWARD</th>
-                    <th>POIN DIBUTUHKAN</th>
-                    <th>STOK TERSEDIA</th>
-                    <th>STATUS</th>
-                    <th class="align-right">AKSI</th>
+                    <th>Nama Reward</th>
+                    <th>Poin</th>
+                    <th>Stok</th>
+                    <th>Status</th>
+                    <th class="align-right">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,7 +54,7 @@
                         <td>
                             <strong>{{ $item->nama_reward }}</strong>
                             @if($item->deskripsi)
-                                <div style="font-size:12px;color:#6b7280;margin-top:2px;">{{ Str::limit($item->deskripsi, 60) }}</div>
+                                <div style="font-size:11px;color:#84918c;margin-top:2px;">{{ Str::limit($item->deskripsi, 60) }}</div>
                             @endif
                         </td>
                         <td><strong>{{ number_format($item->poin_harga, 0, ',', '.') }}</strong> poin</td>
@@ -75,7 +74,8 @@
                             <div class="row-actions">
                                 <a class="action-btn" href="{{ route('admin.rewards.show', $item) }}">Detail</a>
                                 <a class="action-btn" href="{{ route('admin.rewards.edit', $item) }}">Edit</a>
-                                <form method="POST" action="{{ route('admin.rewards.destroy', $item) }}" onsubmit="return confirm('Hapus reward {{ addslashes($item->nama_reward) }}?')">
+                                <form method="POST" action="{{ route('admin.rewards.destroy', $item) }}"
+                                      data-gracia-confirm="Hapus reward {{ addslashes($item->nama_reward) }}?">
                                     @csrf
                                     @method('DELETE')
                                     <button class="action-btn delete" type="submit">Hapus</button>
@@ -97,3 +97,7 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/gracia_p11_p12.js') }}"></script>
+@endpush
