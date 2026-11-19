@@ -10,6 +10,8 @@ use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\JenisResiduController;
 use App\Http\Controllers\ResiduController;
+use App\Http\Controllers\WilayahController;
+use App\Http\Controllers\JadwalController;
 use App\Models\User;
 
 /*
@@ -67,6 +69,12 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin,Petugas'])->group(functi
 
     // 3. P-02 CRUD Lokasi Drop Point
     Route::resource('/drop-points', DropPointController::class)->names('admin.drop-points');
+
+    // P-09 CRUD Jadwal Pengumpulan
+    Route::resource('/jadwal', JadwalController::class)->names('admin.jadwal');
+
+    // P-10 CRUD Wilayah/RW
+    Route::resource('/wilayah', WilayahController::class)->names('admin.wilayah');
 
     // 4. P-13 CRUD Pengeluaran Operasional
     Route::resource('/pengeluaran', PengeluaranController::class)->names('admin.pengeluaran');

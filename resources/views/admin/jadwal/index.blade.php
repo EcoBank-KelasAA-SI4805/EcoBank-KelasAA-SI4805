@@ -1,0 +1,11 @@
+@extends('layouts.admin')
+@section('title','Jadwal Pengumpulan')
+@section('breadcrumb','Jadwal Pengumpulan')
+@section('content')
+<div class="page-heading"><div><div class="eyebrow">P-09 · MASTER DATA</div><h1>Jadwal Pengumpulan</h1><p>Atur jadwal pengumpulan sampah per wilayah beserta petugasnya.</p></div><a class="btn btn-primary" href="{{ route('admin.jadwal.create') }}">＋ Buat jadwal</a></div>
+<div class="panel"><div class="data-toolbar"><div><h3>Daftar jadwal</h3><p>{{ $jadwal->total() }} jadwal ditemukan</p></div><form class="toolbar-actions" method="GET"><label>Dari <input class="data-search" type="date" name="dari" value="{{ $dari }}"></label><label>Sampai <input class="data-search" type="date" name="sampai" value="{{ $sampai }}"></label><button class="btn btn-outline">Filter</button>@if($dari || $sampai)<a class="btn btn-outline" href="{{ route('admin.jadwal.index') }}">Reset</a>@endif</form></div>
+<div class="table-scroll"><table><thead><tr><th>TANGGAL</th><th>JAM</th><th>WILAYAH</th><th>PETUGAS</th><th>STATUS</th><th class="align-right">AKSI</th></tr></thead><tbody>
+@forelse($jadwal as $item)<tr><td><strong>{{ $item->tanggal->format('d M Y') }}</strong></td><td>{{ $item->jam_hm }} WIB</td><td>{{ $item->wilayah?->nama_rw }}<small>Kel. {{ $item->wilayah?->kelurahan }}</small></td><td>{{ $item->petugas?->name ?? '-' }}</td><td><span class="status {{ $item->tanggal->isToday() ? 'pending' : ($item->tanggal->isPast() ? 'inactive' : 'success') }}">{{ $item->tanggal->isToday() ? 'Hari ini' : ($item->tanggal->isPast() ? 'Selesai' : 'Akan datang') }}</span></td><td><div class="row-actions"><a class="action-btn" href="{{ route('admin.jadwal.show',$item) }}">Detail</a><a class="action-btn" href="{{ route('admin.jadwal.edit',$item) }}">Edit</a><form method="POST" action="{{ route('admin.jadwal.destroy',$item) }}" onsubmit="return confirm('Batalkan/hapus jadwal ini?')">@csrf @method('DELETE')<button class="action-btn delete" type="submit">Batalkan</button></form></div></td></tr>
+@empty<tr><td colspan="6" class="empty-table">Belum ada jadwal atau data tidak ditemukan.</td></tr>@endforelse
+</tbody></table></div><div class="table-bottom">{{ $jadwal->links() }}</div></div>
+@endsection
