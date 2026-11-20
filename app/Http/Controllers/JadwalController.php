@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jadwal;
-use App\Models\User;
+use App\Models\Nasabah;
 use App\Models\Wilayah;
 use Illuminate\Http\Request;
 
@@ -62,8 +62,8 @@ class JadwalController extends Controller
             'isEdit' => $isEdit,
             'wilayahList' => Wilayah::orderBy('nama_rw')->get(),
             // Petugas = pengguna berperan Petugas/Admin yang akunnya aktif.
-            'petugasList' => User::whereRaw('LOWER(role) IN (?, ?)', ['petugas', 'admin'])
-                ->whereRaw('LOWER(status) = ?', ['aktif'])->orderBy('name')->get(),
+            'petugasList' => Nasabah::whereRaw('LOWER(role) IN (?, ?)', ['petugas', 'admin'])
+                ->whereRaw('LOWER(status) = ?', ['aktif'])->orderBy('nama')->get(),
         ];
     }
 
@@ -73,7 +73,7 @@ class JadwalController extends Controller
             'tanggal' => ['required', 'date'],
             'jam' => ['required', 'date_format:H:i'],
             'wilayah_id' => ['required', 'exists:wilayah,id'],
-            'petugas_id' => ['required', 'exists:users,id'],
+            'petugas_id' => ['required', 'exists:nasabah,id'],
         ], [
             'wilayah_id.required' => 'Wilayah wajib dipilih.',
             'petugas_id.required' => 'Petugas wajib dipilih.',
