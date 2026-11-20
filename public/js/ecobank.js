@@ -26,7 +26,71 @@ let users=[
 ];let pendingStatusId=null;
 function initUsers(){const body=document.getElementById('userTableBody');if(!body)return;renderUsers();['userSearch','roleFilter','statusFilter'].forEach(id=>document.getElementById(id).addEventListener(id==='userSearch'?'input':'change',renderUsers));document.getElementById('addUserBtn').addEventListener('click',()=>openUserForm());document.getElementById('userForm').addEventListener('submit',saveUser);document.getElementById('confirmAction').addEventListener('click',applyStatusChange)}
 function initials(name){return name.split(' ').slice(0,2).map(x=>x[0]).join('').toUpperCase()}
-function renderUsers(){const body=document.getElementById('userTableBody');if(!body)return;const q=document.getElementById('userSearch').value.toLowerCase(),role=document.getElementById('roleFilter').value,status=document.getElementById('statusFilter').value;const list=users.filter(u=>(u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q))&&(!role||u.role===role)&&(!status||u.status===status));body.innerHTML=list.map(u=>`<tr><td><div class="table-person"><div class="avatar">${initials(u.name)}</div><div><strong>${escapeHtml(u.name)}</strong><small>${escapeHtml(u.email)}</small></div></div></td><td><span class="role-badge role-${u.role.toLowerCase()}">${u.role}</span></td><td>${u.joined}</td><td><span class="status ${u.status==='Aktif'?'success':'inactive'}">${u.status}</span></td><td><div class="row-actions"><button class="action-btn" onclick="editUser(${u.id})">Edit</button><button class="action-btn ${u.status==='Aktif'?'danger':''}" onclick="askStatusChange(${u.id})">${u.status==='Aktif'?'Nonaktifkan':'Aktifkan'}</button></div></td></tr>`).join('')||'<tr><td colspan="5" style="text-align:center;padding:30px;color:#9aa49f">Pengguna tidak ditemukan.</td></tr>';document.getElementById('userCountLabel').textContent=`Menampilkan ${list.length} dari ${users.length} pengguna`;document.getElementById('countAll').textContent=users.length;document.getElementById('countActive').textContent=users.filter(u=>u.status==='Aktif').length;document.getElementById('countInactive').textContent=users.filter(u=>u.status==='Nonaktif').length;document.getElementById('countAdmin').textContent=users.filter(u=>u.role==='Admin').length}
+function renderUsers(){
+  const body=document.getElementById('userTableBody');
+  if(!body)return;
+  const q=document.getElementById('userSearch').value.toLowerCase(),role=document.getElementById('roleFilter').value,status=document.getElementById('statusFilter').value;
+  const list=users.filter(u=>(u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q))&&(!role||u.role===role)&&(!status||u.status===status));
+  body.innerHTML=list.map(u=>{
+    const isAktif=u.status==='Aktif';
+    const statusBtnClass=isAktif?'status-deactivate':'status-activate';
+    const statusText=isAktif?'Nonaktifkan':'Aktifkan';
+    const statusBadge=isAktif
+      ? `<span class="status-badge-modern active"><span class="badge-dot green"></span><span>Aktif</span></span>`
+      : `<span class="status-badge-modern inactive"><span class="badge-dot red"></span><span>Nonaktif</span></span>`;
+    const statusIcon=isAktif
+      ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`
+      : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+    return `<tr>
+      <td>
+        <div class="table-person">
+          <div class="avatar">${initials(u.name)}</div>
+          <div><strong>${escapeHtml(u.name)}</strong><small>${escapeHtml(u.email)}</small></div>
+        </div>
+      </td>
+      <td><span class="role-badge role-${u.role.toLowerCase()}">${u.role}</span></td>
+      <td>${u.joined}</td>
+      <td>${statusBadge}</td>
+      <td>
+        <div class="action-group">
+          <button class="act-btn view" onclick="viewUser(${u.id})" title="Lihat Detail">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>Detail</span>
+          </button>
+          <button class="act-btn edit" onclick="editUser(${u.id})" title="Ubah Akun">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+            <span>Edit</span>
+          </button>
+          <button class="act-btn ${statusBtnClass}" onclick="askStatusChange(${u.id})" title="${statusText} Akun">
+            ${statusIcon}
+            <span>${statusText}</span>
+          </button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="5" style="text-align:center;padding:30px;color:#9aa49f">Pengguna tidak ditemukan.</td></tr>';
+  document.getElementById('userCountLabel').textContent=`Menampilkan ${list.length} dari ${users.length} pengguna`;
+  document.getElementById('countAll').textContent=users.length;
+  document.getElementById('countActive').textContent=users.filter(u=>u.status==='Aktif').length;
+  document.getElementById('countInactive').textContent=users.filter(u=>u.status==='Nonaktif').length;
+  document.getElementById('countAdmin').textContent=users.filter(u=>u.role==='Admin').length;
+}
+function viewUser(id){
+  const u=users.find(x=>x.id===id);
+  if(!u)return;
+  const av=document.getElementById('detailAvatar');if(av)av.textContent=initials(u.name);
+  const nm=document.getElementById('detailName');if(nm)nm.textContent=u.name;
+  const em=document.getElementById('detailEmail');if(em)em.textContent=u.email;
+  const rl=document.getElementById('detailRole');if(rl){rl.textContent=u.role;rl.className='role-badge role-'+u.role.toLowerCase();}
+  const st=document.getElementById('detailStatus');if(st){
+    st.innerHTML = u.status === 'Aktif'
+      ? '<span class="status-badge-modern active"><span class="badge-dot green"></span><span>Aktif</span></span>'
+      : '<span class="status-badge-modern inactive"><span class="badge-dot red"></span><span>Nonaktif</span></span>';
+  }
+  const jn=document.getElementById('detailJoined');if(jn)jn.textContent=u.joined||'-';
+  const eb=document.getElementById('detailEditBtn');if(eb)eb.onclick=()=>{closeModal('userDetailModal');editUser(u.id);};
+  openModal('userDetailModal');
+}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function openUserForm(user=null){document.getElementById('userForm').reset();document.getElementById('editUserId').value=user?user.id:'';document.getElementById('modalTitle').textContent=user?'Edit pengguna':'Tambah pengguna';document.getElementById('userName').value=user?.name||'';document.getElementById('userEmail').value=user?.email||'';document.getElementById('userRole').value=user?.role||'Nasabah';document.getElementById('userStatus').value=user?.status||'Aktif';const editing=!!user;document.getElementById('passwordField').style.display=editing?'none':'flex';document.getElementById('confirmField').style.display=editing?'none':'flex';document.getElementById('userPassword').required=!editing;document.getElementById('userConfirm').required=!editing;openModal('userModal')}
 function editUser(id){const u=users.find(x=>x.id===id);if(u)openUserForm(u)}
