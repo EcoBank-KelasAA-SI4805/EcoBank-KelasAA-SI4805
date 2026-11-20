@@ -8,9 +8,8 @@ use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\DropPointController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PengumumanController;
-use App\Http\Controllers\JenisResiduController;
-use App\Http\Controllers\ResiduController;
-use App\Models\User;
+use App\Http\Controllers\WilayahController;
+use App\Http\Controllers\JadwalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,14 +46,6 @@ Route::get('/pengumuman/{pengumuman}', [PengumumanController::class, 'publicShow
 Route::get('/portal-pengumuman/{pengumuman}', [PengumumanController::class, 'publicShow'])->name('pengumuman.show');
 
 // --------------------------------------------------------------------------
-// MODUL RESIDU (P-15 & P-16: Jenis Residu & Pencatatan Residu - Khusus Admin & Petugas)
-// --------------------------------------------------------------------------
-Route::middleware(['auth', 'role:Admin,Petugas'])->group(function () {
-    Route::resource('jenis-residu', JenisResiduController::class);
-    Route::resource('residu', ResiduController::class);
-});
-
-// --------------------------------------------------------------------------
 // PANEL OPERASIONAL & MASTER DATA (KHUSUS ADMIN & PETUGAS)
 // --------------------------------------------------------------------------
 Route::prefix('admin')->middleware(['auth', 'role:Admin,Petugas'])->group(function () {
@@ -68,33 +59,15 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin,Petugas'])->group(functi
     // 3. P-02 CRUD Lokasi Drop Point
     Route::resource('/drop-points', DropPointController::class)->names('admin.drop-points');
 
-    // 4. P-13 CRUD Pengeluaran Operasional
+    // 4. P-09 CRUD Jadwal Pengumpulan
+    Route::resource('/jadwal', JadwalController::class)->names('admin.jadwal');
+
+    // 5. P-10 CRUD Wilayah/RW
+    Route::resource('/wilayah', WilayahController::class)->names('admin.wilayah');
+
+    // 6. P-13 CRUD Pengeluaran Operasional
     Route::resource('/pengeluaran', PengeluaranController::class)->names('admin.pengeluaran');
 
-    // 5. P-14 CRUD Pengumuman & Informasi (Kelola Pengumuman)
+    // 7. P-14 CRUD Pengumuman & Informasi (Kelola Pengumuman)
     Route::resource('/pengumuman', PengumumanController::class)->names('admin.pengumuman');
-
-    // 6. Manajemen Akun Pengguna (Khusus Admin)
-    Route::get('/users', function () {
-        $dbUsers = User::orderBy('id', 'desc')->get()->map(function ($u) {
-            return [
-                'id' => $u->id,
-                'name' => $u->name,
-                'email' => $u->email,
-                'role' => ucfirst(strtolower($u->role)),
-                'joined' => $u->created_at ? $u->created_at->format('d M Y') : '12 Jan 2026',
-                'status' => ucfirst(strtolower($u->status ?? 'Aktif')),
-            ];
-        });
-        return view('admin.users', ['dbUsers' => $dbUsers]);
-    })->name('admin.users')->middleware('role:Admin');
-
-    // 7. Transaksi & Laporan (Placeholder)
-    Route::view('/transactions', 'admin.placeholder', [
-        'pageTitle' => 'Transaksi Bank Sampah'
-    ])->name('admin.transactions');
-
-    Route::view('/reports', 'admin.placeholder', [
-        'pageTitle' => 'Laporan Eksekutif'
-    ])->name('admin.reports');
 });

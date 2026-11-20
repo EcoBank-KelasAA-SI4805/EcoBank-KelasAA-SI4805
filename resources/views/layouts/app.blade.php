@@ -80,16 +80,16 @@
                        href="{{ route('admin.drop-points.index') }}">
                         <i class="bi bi-geo-alt-fill me-2"></i>Drop Points
                     </a>
-                    <a class="nav-link {{ request()->routeIs('jenis-residu.*') ? 'active' : '' }}"
-                       href="{{ route('jenis-residu.index') }}">
-                        <i class="bi bi-tags-fill me-2"></i>Jenis Residu
+                    <a class="nav-link {{ request()->routeIs('admin.wilayah.*') ? 'active' : '' }}"
+                       href="{{ route('admin.wilayah.index') }}">
+                        <i class="bi bi-map-fill me-2"></i>Wilayah/RW
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('admin.jadwal.*') ? 'active' : '' }}"
+                       href="{{ route('admin.jadwal.index') }}">
+                        <i class="bi bi-calendar-event-fill me-2"></i>Jadwal Pengumpulan
                     </a>
 
                     <div class="sidebar-heading mt-2">OPERASIONAL</div>
-                    <a class="nav-link {{ request()->routeIs('residu.*') ? 'active' : '' }}"
-                       href="{{ route('residu.index') }}">
-                        <i class="bi bi-trash3-fill me-2"></i>Pencatatan Residu
-                    </a>
                     <a class="nav-link {{ request()->routeIs('admin.pengeluaran.*') ? 'active' : '' }}"
                        href="{{ route('admin.pengeluaran.index') }}">
                         <i class="bi bi-cash-stack me-2"></i>Pengeluaran
@@ -98,14 +98,6 @@
                        href="{{ route('admin.pengumuman.index') }}">
                         <i class="bi bi-megaphone-fill me-2"></i>Pengumuman
                     </a>
-
-                    @if($isAdmin)
-                        <div class="sidebar-heading mt-2">SISTEM</div>
-                        <a class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}"
-                           href="{{ route('admin.users') }}">
-                            <i class="bi bi-shield-lock-fill me-2"></i>Kelola Pengguna
-                        </a>
-                    @endif
                 @endif
             </nav>
         </div>

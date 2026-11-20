@@ -10,7 +10,7 @@
             OVERVIEW OPERASIONAL ECOBANK
         </div>
         <h1>Dashboard Utama</h1>
-        <p>Selamat datang kembali, <strong>{{ Auth::check() ? Auth::user()->name : 'Hasbi Muhammad' }}</strong>. Pantau aktivitas penyetoran sampah, keuangan, dan status operasional.</p>
+        <p>Selamat datang kembali, <strong>{{ Auth::check() ? (Auth::user()->nama ?? Auth::user()->name) : 'Admin' }}</strong>. Pantau aktivitas nasabah, keuangan, drop point, dan pengumuman.</p>
     </div>
     <div class="heading-actions">
         <div class="date-chip">
@@ -28,45 +28,16 @@
 <div class="stats-grid">
     <article class="stat-card">
         <div class="stat-top">
-            <span>TOTAL SAMPAH TERKUMPUL</span>
-            <div class="stat-icon green">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.044-1.78l.044-.082 2.94-5.26M14 5h5.185a1.83 1.83 0 0 1 1.57.881 1.785 1.785 0 0 1 .044 1.78l-.044.082-2.94 5.26M9.1 12l2.9 5.2 2.9-5.2"/><circle cx="12" cy="12" r="9"/></svg>
-            </div>
-        </div>
-        <div class="stat-value" id="totalWaste">{{ number_format($totalBeratResidu > 0 ? $totalBeratResidu : 8450, 1, ',', '.') }} <small>kg</small></div>
-        <div class="stat-foot positive">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-            <span>{{ $totalJenisResidu }} jenis residu terklasifikasi</span>
-        </div>
-        <div class="stat-accent green-accent"></div>
-    </article>
-
-    <article class="stat-card">
-        <div class="stat-top">
             <span>NASABAH TERDAFTAR</span>
             <div class="stat-icon blue">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
         </div>
-        <div class="stat-value" id="totalDeposits">{{ $totalNasabah }} <small>nasabah aktif</small></div>
+        <div class="stat-value" id="totalDeposits">{{ $totalNasabah }} <small>warga terdaftar</small></div>
         <div class="stat-foot neutral">
             <span>Total Saldo: <b>Rp {{ number_format($totalSaldoNasabah, 0, ',', '.') }}</b></span>
         </div>
         <div class="stat-accent blue-accent"></div>
-    </article>
-
-    <article class="stat-card">
-        <div class="stat-top">
-            <span>PENGELUARAN OPERASIONAL</span>
-            <div class="stat-icon orange">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
-            </div>
-        </div>
-        <div class="stat-value" id="withdrawValue">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</div>
-        <div class="stat-foot neutral">
-            <span>Penanganan Residu: <b>Rp {{ number_format($totalBiayaResidu, 0, ',', '.') }}</b></span>
-        </div>
-        <div class="stat-accent orange-accent"></div>
     </article>
 
     <article class="stat-card">
@@ -78,9 +49,37 @@
         </div>
         <div class="stat-value">{{ $totalDropPointsAktif }} <small>titik setor aktif</small></div>
         <div class="stat-foot positive">
-            <span>{{ $totalPengumuman }} pengumuman diterbitkan</span>
+            <span>Dari total {{ $totalDropPoints }} titik lokasi</span>
         </div>
         <div class="stat-accent purple-accent"></div>
+    </article>
+
+    <article class="stat-card">
+        <div class="stat-top">
+            <span>PENGELUARAN OPERASIONAL</span>
+            <div class="stat-icon orange">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+            </div>
+        </div>
+        <div class="stat-value" id="withdrawValue">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</div>
+        <div class="stat-foot neutral">
+            <span>Total kas keluar operasional</span>
+        </div>
+        <div class="stat-accent orange-accent"></div>
+    </article>
+
+    <article class="stat-card">
+        <div class="stat-top">
+            <span>PENGUMUMAN & EDUKASI</span>
+            <div class="stat-icon green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+            </div>
+        </div>
+        <div class="stat-value">{{ $totalPengumuman }} <small>informasi aktif</small></div>
+        <div class="stat-foot positive">
+            <span>Tersinkron ke Papan Pengumuman Publik</span>
+        </div>
+        <div class="stat-accent green-accent"></div>
     </article>
 </div>
 
@@ -111,28 +110,8 @@
             </div>
         </a>
 
-        <a href="{{ route('jenis-residu.index') }}" class="panel" style="padding: 16px; display: flex; align-items: center; gap: 14px; text-decoration: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
-            <div class="stat-icon green" style="width: 40px; height: 40px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 5 4 4-10 10H5v-4l10-10z"/></svg>
-            </div>
-            <div>
-                <strong style="color: #0f172a; font-size: 13.5px; display: block;">Jenis Residu</strong>
-                <small style="color: #64748b; font-size: 11.5px;">P-05 · {{ $totalJenisResidu }} Klasifikasi</small>
-            </div>
-        </a>
-
-        <a href="{{ route('residu.index') }}" class="panel" style="padding: 16px; display: flex; align-items: center; gap: 14px; text-decoration: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
-            <div class="stat-icon orange" style="width: 40px; height: 40px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
-            </div>
-            <div>
-                <strong style="color: #0f172a; font-size: 13.5px; display: block;">Pencatatan Residu</strong>
-                <small style="color: #64748b; font-size: 11.5px;">P-06 · Penimbangan</small>
-            </div>
-        </a>
-
         <a href="{{ route('admin.pengeluaran.index') }}" class="panel" style="padding: 16px; display: flex; align-items: center; gap: 14px; text-decoration: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
-            <div class="stat-icon green" style="width: 40px; height: 40px;">
+            <div class="stat-icon orange" style="width: 40px; height: 40px;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
             </div>
             <div>
@@ -141,13 +120,13 @@
             </div>
         </a>
 
-        <a href="{{ route('admin.users') }}" class="panel" style="padding: 16px; display: flex; align-items: center; gap: 14px; text-decoration: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
-            <div class="stat-icon purple" style="width: 40px; height: 40px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        <a href="{{ route('admin.pengumuman.index') }}" class="panel" style="padding: 16px; display: flex; align-items: center; gap: 14px; text-decoration: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+            <div class="stat-icon green" style="width: 40px; height: 40px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
             </div>
             <div>
-                <strong style="color: #0f172a; font-size: 13.5px; display: block;">Kelola Pengguna</strong>
-                <small style="color: #64748b; font-size: 11.5px;">FR-01 · {{ $totalUsers }} Akun Sistem</small>
+                <strong style="color: #0f172a; font-size: 13.5px; display: block;">Kelola Pengumuman</strong>
+                <small style="color: #64748b; font-size: 11.5px;">P-14 · {{ $totalPengumuman }} Informasi</small>
             </div>
         </a>
     </div>
@@ -155,29 +134,11 @@
 
 {{-- Charts Grid --}}
 <div class="charts-grid">
-    <article class="panel chart-panel">
-        <div class="panel-heading" style="padding: 0 0 16px;">
-            <div>
-                <h3>Komposisi Sampah & Residu</h3>
-                <p>Distribusi berat sampah yang masuk berdasarkan kategori</p>
-            </div>
-            <a href="{{ route('jenis-residu.index') }}" class="btn btn-outline btn-sm">Kelola Jenis →</a>
-        </div>
-        <div class="chart-wrap doughnut-wrap">
-            <canvas id="wasteChart"></canvas>
-            <div class="chart-center">
-                <strong>{{ number_format($totalBeratResidu > 0 ? $totalBeratResidu : 8450, 0, ',', '.') }}</strong>
-                <span>Total kg</span>
-            </div>
-        </div>
-        <div class="legend-grid" id="wasteLegend"></div>
-    </article>
-
-    <article class="panel chart-panel">
+    <article class="panel chart-panel" style="grid-column: 1 / -1;">
         <div class="panel-heading" style="padding: 0 0 16px;">
             <div>
                 <h3>Arus Kas & Operasional</h3>
-                <p>Perbandingan simpanan tabungan nasabah dengan biaya operasional</p>
+                <p>Perbandingan simpanan tabungan nasabah dengan biaya pengeluaran operasional</p>
             </div>
             <span class="legend-inline">
                 <i class="dot deposit"></i> Simpanan Nasabah 
@@ -202,49 +163,43 @@
 
 {{-- Dua Panel Tabel Terbaru --}}
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px; margin-bottom: 24px;">
-    {{-- Tabel Pencatatan Residu Terkini --}}
+    {{-- Tabel Nasabah Terbaru --}}
     <div class="panel">
         <div class="panel-heading">
             <div>
-                <h3>Catatan Residu Terbaru</h3>
-                <p>Sampah residu yang baru saja ditimbang</p>
+                <h3>Nasabah Terdaftar</h3>
+                <p>Warga yang baru bergabung dalam bank sampah</p>
             </div>
-            <a class="btn btn-outline btn-sm" href="{{ route('residu.index') }}">Lihat Semua →</a>
+            <a class="btn btn-outline btn-sm" href="{{ route('admin.nasabah.index') }}">Kelola Nasabah →</a>
         </div>
         <div class="table-scroll">
             <table>
                 <thead>
                     <tr>
-                        <th>TANGGAL</th>
-                        <th>JENIS RESIDU</th>
-                        <th>BERAT</th>
-                        <th>TOTAL BIAYA</th>
-                        <th>STATUS</th>
+                        <th>NASABAH</th>
+                        <th>NIK</th>
+                        <th>RW</th>
+                        <th>SALDO SIMPANAN</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($residuTerbaru as $r)
+                    @forelse($nasabahTerbaru as $n)
                         <tr>
-                            <td>{{ $r->tanggal ? $r->tanggal->format('d M Y') : '-' }}</td>
                             <td>
-                                <strong>{{ $r->jenisResidu->nama ?? 'Residu Umum' }}</strong>
-                                <small>{{ $r->asal ?? '-' }}</small>
+                                <div class="table-person">
+                                    <div class="avatar pastel-green">{{ strtoupper(substr($n->nama ?? $n->name, 0, 2)) }}</div>
+                                    <div>
+                                        <strong>{{ $n->nama ?? $n->name }}</strong>
+                                        <small>{{ $n->no_hp }}</small>
+                                    </div>
+                                </div>
                             </td>
-                            <td><strong>{{ number_format($r->berat_kg, 1, ',', '.') }} kg</strong></td>
-                            <td>Rp {{ number_format($r->total_biaya, 0, ',', '.') }}</td>
-                            <td>
-                                @php
-                                    $stClass = match($r->status) {
-                                        'ditampung' => 'background:#dbeafe; color:#1e40af;',
-                                        'diangkut' => 'background:#fef3c7; color:#92400e;',
-                                        default => 'background:#f1f5f9; color:#475569;'
-                                    };
-                                @endphp
-                                <span class="type-pill" style="{{ $stClass }}">{{ ucfirst($r->status) }}</span>
-                            </td>
+                            <td>{{ $n->nik }}</td>
+                            <td>RW {{ $n->rw }}</td>
+                            <td><strong style="color: #166534;">Rp {{ number_format($n->saldo, 0, ',', '.') }}</strong></td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="empty-table">Belum ada pencatatan residu.</td></tr>
+                        <tr><td colspan="4" class="empty-table">Belum ada nasabah terdaftar.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -287,52 +242,8 @@
     </div>
 </div>
 
-{{-- Baris Nasabah & Pengumuman --}}
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
-    {{-- Nasabah Terbaru --}}
-    <div class="panel">
-        <div class="panel-heading">
-            <div>
-                <h3>Nasabah Terdaftar</h3>
-                <p>Warga yang baru bergabung dalam bank sampah</p>
-            </div>
-            <a class="btn btn-outline btn-sm" href="{{ route('admin.nasabah.index') }}">Kelola Nasabah →</a>
-        </div>
-        <div class="table-scroll">
-            <table>
-                <thead>
-                    <tr>
-                        <th>NASABAH</th>
-                        <th>NIK</th>
-                        <th>RW</th>
-                        <th>SALDO SIMPANAN</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($nasabahTerbaru as $n)
-                        <tr>
-                            <td>
-                                <div class="table-person">
-                                    <div class="avatar pastel-green">{{ strtoupper(substr($n->nama, 0, 2)) }}</div>
-                                    <div>
-                                        <strong>{{ $n->nama }}</strong>
-                                        <small>{{ $n->no_hp }}</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>{{ $n->nik }}</td>
-                            <td>RW {{ $n->rw }}</td>
-                            <td><strong style="color: #166534;">Rp {{ number_format($n->saldo, 0, ',', '.') }}</strong></td>
-                        </tr>
-                    @empty
-                        <tr><td colspan="4" class="empty-table">Belum ada nasabah terdaftar.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    {{-- Pengumuman Terbaru --}}
+{{-- Baris Pengumuman --}}
+<div style="margin-bottom: 24px;">
     <div class="panel">
         <div class="panel-heading">
             <div>
@@ -363,6 +274,10 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', () => initDashboard());
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof initDashboard === 'function') {
+        initDashboard();
+    }
+});
 </script>
 @endpush

@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'ecobank/hasbi-ppl',
-        'pretty_version' => 'dev-Dhafin_PBI_01_02_19_20',
-        'version' => 'dev-Dhafin_PBI_01_02_19_20',
-        'reference' => '8e671934a2079a40bbdd1294ae9c9df69106907d',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '1f9a87ed8af1fe451ac882a6469fd384e6d5a533',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -77,9 +77,9 @@
             'dev_requirement' => false,
         ),
         'ecobank/hasbi-ppl' => array(
-            'pretty_version' => 'dev-Dhafin_PBI_01_02_19_20',
-            'version' => 'dev-Dhafin_PBI_01_02_19_20',
-            'reference' => '8e671934a2079a40bbdd1294ae9c9df69106907d',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '1f9a87ed8af1fe451ac882a6469fd384e6d5a533',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
