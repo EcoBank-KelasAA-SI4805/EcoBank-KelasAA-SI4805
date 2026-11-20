@@ -10,6 +10,8 @@ use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\RewardController;
+use App\Http\Controllers\MetodePenarikanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,9 +67,15 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin,Petugas'])->group(functi
     // 5. P-10 CRUD Wilayah/RW
     Route::resource('/wilayah', WilayahController::class)->names('admin.wilayah');
 
-    // 6. P-13 CRUD Pengeluaran Operasional
+    // 6. P-11 CRUD Katalog Reward (Gracia Gebriella Sianturi)
+    Route::resource('/rewards', RewardController::class)->names('admin.rewards');
+
+    // 7. P-12 CRUD Metode Penarikan (Gracia Gebriella Sianturi)
+    Route::resource('/metode-penarikan', MetodePenarikanController::class)->names('admin.metode-penarikan');
+
+    // 8. P-13 CRUD Pengeluaran Operasional
     Route::resource('/pengeluaran', PengeluaranController::class)->names('admin.pengeluaran');
 
-    // 7. P-14 CRUD Pengumuman & Informasi (Kelola Pengumuman)
+    // 9. P-14 CRUD Pengumuman & Informasi (Kelola Pengumuman)
     Route::resource('/pengumuman', PengumumanController::class)->names('admin.pengumuman');
 });
