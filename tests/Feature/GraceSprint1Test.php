@@ -2,14 +2,30 @@
 
 namespace Tests\Feature;
 
-use App\Models\Reward;
 use App\Models\MetodePenarikan;
+use App\Models\Nasabah;
+use App\Models\Reward;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class GraceSprint1Test extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $admin = Nasabah::create([
+            'nama' => 'Admin Gracia',
+            'email' => 'admin.gracia@ecobank.test',
+            'password' => bcrypt('password'),
+            'role' => 'Admin',
+            'status' => 'Aktif',
+        ]);
+
+        $this->actingAs($admin);
+    }
 
     /**
      * P-11: C - Tambah reward (nama, poin/harga, stok)
