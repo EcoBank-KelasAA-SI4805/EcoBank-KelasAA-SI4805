@@ -223,6 +223,11 @@ class DatabaseSeeder extends Seeder
                 'deskripsi' => 'Pencairan saldo langsung ke saldo dompet digital nasabah.',
                 'status_aktif' => true,
             ]);
+            // 11. Data Jenis Residu & Residu (P-15 & P-16)
+            $this->call([
+                JenisResiduSeeder::class,
+                ResiduSeeder::class,
+            ]);
         }
     }
 }
