@@ -31,6 +31,26 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        Nasabah::firstOrCreate(
+            ['email' => 'hasbi@ecobank.test'],
+            [
+                'nama' => 'Hasbi Muhammad',
+                'password' => Hash::make('password'),
+                'role' => 'Admin',
+                'status' => 'Aktif',
+            ]
+        );
+
+        Nasabah::firstOrCreate(
+            ['email' => 'renaldi@ecobank.test'],
+            [
+                'nama' => 'Renaldi Admin',
+                'password' => Hash::make('password'),
+                'role' => 'Admin',
+                'status' => 'Aktif',
+            ]
+        );
+
         // 2. Akun Petugas
         Nasabah::firstOrCreate(
             ['email' => 'petugas@ecobank.test'],
@@ -42,7 +62,32 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        Nasabah::firstOrCreate(
+            ['email' => 'dhafin@ecobank.test'],
+            [
+                'nama' => 'Muhammad Dhafin',
+                'password' => Hash::make('password'),
+                'role' => 'Petugas',
+                'status' => 'Aktif',
+            ]
+        );
+
         // 3. Data Nasabah
+        Nasabah::firstOrCreate(
+            ['email' => 'andi@email.test'],
+            [
+                'nama' => 'Andi Pratama',
+                'password' => Hash::make('password'),
+                'role' => 'Nasabah',
+                'status' => 'Aktif',
+                'nik' => '3201010101900001',
+                'alamat' => 'Jl. Kenanga No. 10, RT 01 / RW 01',
+                'no_hp' => '081234567899',
+                'rw' => '01',
+                'saldo' => 120000.00,
+            ]
+        );
+
         Nasabah::firstOrCreate(
             ['email' => 'nasabah@ecobank.test'],
             [
