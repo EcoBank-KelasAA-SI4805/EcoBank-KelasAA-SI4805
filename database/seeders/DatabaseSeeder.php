@@ -227,6 +227,7 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 JenisResiduSeeder::class,
                 ResiduSeeder::class,
+                JenisSampahSeeder::class,
             ]);
         }
     }

@@ -34,7 +34,7 @@ Route::get('/', function () {
         return redirect()->route('admin.dashboard');
     }
 
-    return redirect()->route('pengumuman.public');
+    return redirect()->route('login');
 })->name('home');
 
 // --------------------------------------------------------------------------
