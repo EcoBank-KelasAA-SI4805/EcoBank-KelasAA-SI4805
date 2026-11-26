@@ -53,8 +53,8 @@
             <strong>RW {{ $nasabah->rw }}</strong>
         </div>
         <div class="detail-item">
-            <small>TOTAL TRANSAKSI TERCATAT</small>
-            <strong>{{ $nasabah->transactions()->count() }} kali transaksi</strong>
+            <small>STATUS AKUN</small>
+            <strong>{{ $nasabah->status ?? 'Aktif' }}</strong>
         </div>
         <div class="detail-item" style="grid-column: 1 / -1;">
             <small>ALAMAT LENGKAP DOMISILI</small>

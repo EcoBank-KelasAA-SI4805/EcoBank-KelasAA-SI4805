@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\DropPoint;
-use App\Models\JenisResidu;
 use App\Models\Nasabah;
 use App\Models\Pengeluaran;
 use App\Models\Pengumuman;
-use App\Models\Residu;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -18,22 +15,15 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $totalNasabah = Nasabah::count();
-        $totalSaldoNasabah = Nasabah::sum('saldo');
+        $totalNasabah = Nasabah::where('role', 'Nasabah')->count();
+        $totalSaldoNasabah = Nasabah::where('role', 'Nasabah')->sum('saldo');
         $totalDropPoints = DropPoint::count();
         $totalDropPointsAktif = DropPoint::where('status_aktif', true)->count();
         $totalPengeluaran = Pengeluaran::sum('nominal');
         $totalPengumuman = Pengumuman::count();
-        $totalJenisResidu = JenisResidu::count();
-        $totalBeratResidu = Residu::sum('berat_kg');
-        $totalBiayaResidu = Residu::sum('total_biaya');
-        $totalUsers = User::count();
 
         // 5 Data Nasabah Terbaru
-        $nasabahTerbaru = Nasabah::latest('id')->take(5)->get();
-
-        // 5 Data Residu Terbaru
-        $residuTerbaru = Residu::with('jenisResidu')->latest('tanggal')->latest('id')->take(5)->get();
+        $nasabahTerbaru = Nasabah::where('role', 'Nasabah')->latest('id')->take(5)->get();
 
         // 5 Pengeluaran Terbaru
         $pengeluaranTerbaru = Pengeluaran::latest('tanggal')->latest('id')->take(5)->get();
@@ -48,12 +38,7 @@ class DashboardController extends Controller
             'totalDropPointsAktif',
             'totalPengeluaran',
             'totalPengumuman',
-            'totalJenisResidu',
-            'totalBeratResidu',
-            'totalBiayaResidu',
-            'totalUsers',
             'nasabahTerbaru',
-            'residuTerbaru',
             'pengeluaranTerbaru',
             'pengumumanTerbaru'
         ));

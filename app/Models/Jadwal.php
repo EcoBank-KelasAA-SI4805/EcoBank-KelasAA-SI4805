@@ -18,7 +18,7 @@ class Jadwal extends Model
 
     public function petugas(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'petugas_id');
+        return $this->belongsTo(Nasabah::class, 'petugas_id');
     }
 
     public function getJamHmAttribute(): string

@@ -24,3 +24,7 @@ auth.json
 # OS Files
 .DS_Store
 Thumbs.db
+
+# SQLite Database
+*.sqlite
+*.sqlite-journal

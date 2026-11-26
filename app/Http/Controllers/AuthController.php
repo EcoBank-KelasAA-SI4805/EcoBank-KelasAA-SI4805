@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Nasabah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,11 +55,11 @@ class AuthController extends Controller
             // Jika role adalah Nasabah, arahkan langsung ke Papan Info Publik
             if ($user->isNasabah()) {
                 return redirect()->route('pengumuman.public')
-                    ->with('success', 'Selamat datang kembali, ' . $user->name . ' (Nasabah)!');
+                    ->with('success', 'Selamat datang kembali, ' . ($user->nama ?? $user->name) . ' (Nasabah)!');
             }
 
             return redirect()->intended(route('admin.dashboard'))
-                ->with('success', 'Selamat datang kembali, ' . $user->name . ' (' . $user->role . ')!');
+                ->with('success', 'Selamat datang kembali, ' . ($user->nama ?? $user->name) . ' (' . $user->role . ')!');
         }
 
         return back()->withErrors([
@@ -90,7 +89,7 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'string', 'email', 'max:100', 'unique:users,email'],
+            'email' => ['required', 'string', 'email', 'max:100', 'unique:nasabah,email'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'nik' => ['nullable', 'digits:16', 'unique:nasabah,nik'],
             'no_hp' => ['nullable', 'string', 'max:20'],
@@ -98,33 +97,25 @@ class AuthController extends Controller
             'alamat' => ['nullable', 'string', 'max:500'],
         ]);
 
-        // Buat Akun User (Nasabah)
-        $user = User::create([
-            'name' => $data['name'],
+        $nasabah = Nasabah::create([
+            'nama' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role' => 'Nasabah',
             'status' => 'Aktif',
+            'nik' => $data['nik'] ?? null,
+            'no_hp' => $data['no_hp'] ?? '-',
+            'rw' => $data['rw'] ?? '01',
+            'alamat' => $data['alamat'] ?? 'Belum diatur',
+            'saldo' => 0,
         ]);
 
-        // Jika data nasabah diisi, buat record Nasabah
-        if (!empty($data['nik'])) {
-            Nasabah::create([
-                'nama' => $data['name'],
-                'nik' => $data['nik'],
-                'alamat' => $data['alamat'] ?? 'Belum diatur',
-                'no_hp' => $data['no_hp'] ?? '-',
-                'rw' => $data['rw'] ?? '01',
-                'saldo' => 0,
-            ]);
-        }
-
         // Login otomatis setelah register
-        Auth::login($user);
+        Auth::login($nasabah);
         $request->session()->regenerate();
 
         return redirect()->route('pengumuman.public')
-            ->with('success', 'Pendaftaran akun EcoBank berhasil! Selamat datang, ' . $user->name . '. Anda dapat melihat seluruh informasi resmi pada Papan Pengumuman Publik.');
+            ->with('success', 'Pendaftaran akun EcoBank berhasil! Selamat datang, ' . $nasabah->nama . '. Anda dapat melihat seluruh informasi resmi pada Papan Pengumuman Publik.');
     }
 
     /**
