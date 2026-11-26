@@ -17,6 +17,8 @@ use App\Http\Controllers\RewardController;
 use App\Http\Controllers\MetodePenarikanController;
 use App\Http\Controllers\JenisSampahController;
 use App\Http\Controllers\HargaSampahController;
+use App\Http\Controllers\PengepulController;
+use App\Http\Controllers\KendaraanPengangkutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +77,12 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin,Petugas'])->group(functi
 
     // 3. P-02 CRUD Lokasi Drop Point
     Route::resource('/drop-points', DropPointController::class)->names('admin.drop-points');
+
+    // P-07 CRUD Data Pengepul
+    Route::resource('/pengepul', PengepulController::class)->names('admin.pengepul');
+
+    // P-08 CRUD Kendaraan Pengangkut
+    Route::resource('/kendaraan', KendaraanPengangkutController::class)->names('admin.kendaraan');
 
     // 4. P-03 CRUD Jenis Sampah & Harga (khusus Admin)
     Route::middleware('role:Admin')->group(function () {
