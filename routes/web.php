@@ -9,10 +9,16 @@ use App\Http\Controllers\DropPointController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\JenisResiduController;
+use App\Http\Controllers\PromoController;
 use App\Http\Controllers\ResiduController;
+use App\Http\Controllers\WilayahController;
+use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\RewardController;
+use App\Http\Controllers\MetodePenarikanController;
+use App\Http\Controllers\JenisSampahController;
+use App\Http\Controllers\HargaSampahController;
 use App\Http\Controllers\PengepulController;
 use App\Http\Controllers\KendaraanPengangkutController;
-use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,15 +26,17 @@ use App\Models\User;
 |--------------------------------------------------------------------------
 */
 
-// Redirect root ke Papan Info Publik (untuk Nasabah/Tamu) atau Dashboard Admin (untuk Admin/Petugas)
+// Redirect halaman utama
 Route::get('/', function () {
     if (Auth::check() && Auth::user()->isNasabah()) {
         return redirect()->route('pengumuman.public');
     }
+
     if (Auth::check() && (Auth::user()->isAdmin() || Auth::user()->isPetugas())) {
         return redirect()->route('admin.dashboard');
     }
-    return redirect()->route('pengumuman.public');
+
+    return redirect()->route('login');
 })->name('home');
 
 // --------------------------------------------------------------------------
@@ -49,7 +57,7 @@ Route::get('/pengumuman/{pengumuman}', [PengumumanController::class, 'publicShow
 Route::get('/portal-pengumuman/{pengumuman}', [PengumumanController::class, 'publicShow'])->name('pengumuman.show');
 
 // --------------------------------------------------------------------------
-// MODUL RESIDU (P-15 & P-16: Jenis Residu & Pencatatan Residu - Khusus Admin & Petugas)
+// MODUL RESIDU (P-15 & P-16: Jenis Residu & Pencatatan Residu)
 // --------------------------------------------------------------------------
 Route::middleware(['auth', 'role:Admin,Petugas'])->group(function () {
     Route::resource('jenis-residu', JenisResiduController::class);
@@ -70,43 +78,49 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin,Petugas'])->group(functi
     // 3. P-02 CRUD Lokasi Drop Point
     Route::resource('/drop-points', DropPointController::class)->names('admin.drop-points');
 
-    // 4. P-13 CRUD Pengeluaran Operasional
+    // P-07 CRUD Data Pengepul
+    Route::resource('/pengepul', PengepulController::class)->names('admin.pengepul');
+
+    // P-08 CRUD Kendaraan Pengangkut
+    Route::resource('/kendaraan', KendaraanPengangkutController::class)->names('admin.kendaraan');
+
+    // 4. P-03 CRUD Jenis Sampah & Harga (khusus Admin)
+    Route::middleware('role:Admin')->group(function () {
+        Route::get('/jenis-sampah/{jenis_sampah}/harga', [HargaSampahController::class, 'edit'])->name('admin.harga.edit');
+        Route::put('/jenis-sampah/{jenis_sampah}/harga', [HargaSampahController::class, 'update'])->name('admin.harga.update');
+
+        Route::patch('/jenis-sampah/{jenis_sampah}/status', [JenisSampahController::class, 'toggleStatus'])->name('admin.jenis-sampah.status');
+
+        Route::resource('/jenis-sampah', JenisSampahController::class)
+            ->parameters(['jenis-sampah' => 'jenis_sampah'])
+            ->names('admin.jenis-sampah');
+    });
+
+    // 5. P-04 CRUD Kelola Promo/Bonus Harga (khusus Admin)
+    Route::middleware('role:Admin')->group(function () {
+        Route::resource('/promo', PromoController::class)->names('admin.promo');
+    });
+
+    // 6. P-09 CRUD Jadwal Pengumpulan
+    Route::resource('/jadwal', JadwalController::class)->names('admin.jadwal');
+
+    // 7. P-10 CRUD Wilayah/RW
+    Route::resource('/wilayah', WilayahController::class)->names('admin.wilayah');
+
+    // 8. P-11 CRUD Katalog Reward (Gracia Gebriella Sianturi)
+    Route::resource('/rewards', RewardController::class)->names('admin.rewards');
+
+    // 9. P-12 CRUD Metode Penarikan (Gracia Gebriella Sianturi)
+    Route::resource('/metode-penarikan', MetodePenarikanController::class)->names('admin.metode-penarikan');
+
+    // 10. P-13 CRUD Pengeluaran Operasional
     Route::resource('/pengeluaran', PengeluaranController::class)->names('admin.pengeluaran');
 
-    // 5. P-14 CRUD Pengumuman & Informasi (Kelola Pengumuman)
+    // 11. P-14 CRUD Pengumuman & Informasi (Kelola Pengumuman)
     Route::resource('/pengumuman', PengumumanController::class)->names('admin.pengumuman');
-
-
-    // 6. CRUD Data Pengepul
-    Route::resource('/pengepul', PengepulController::class)
-        ->names('admin.pengepul');
-
-    // 7. CRUD Kendaraan Pengangkut
-    Route::resource('/kendaraan', KendaraanPengangkutController::class)
-        ->names('admin.kendaraan');
-
-
-    // 6. Manajemen Akun Pengguna (Khusus Admin)
-    Route::get('/users', function () {
-        $dbUsers = User::orderBy('id', 'desc')->get()->map(function ($u) {
-            return [
-                'id' => $u->id,
-                'name' => $u->name,
-                'email' => $u->email,
-                'role' => ucfirst(strtolower($u->role)),
-                'joined' => $u->created_at ? $u->created_at->format('d M Y') : '12 Jan 2026',
-                'status' => ucfirst(strtolower($u->status ?? 'Aktif')),
-            ];
-        });
-        return view('admin.users', ['dbUsers' => $dbUsers]);
-    })->name('admin.users')->middleware('role:Admin');
-
-    // 7. Transaksi & Laporan (Placeholder)
-    Route::view('/transactions', 'admin.placeholder', [
-        'pageTitle' => 'Transaksi Bank Sampah'
-    ])->name('admin.transactions');
-
-    Route::view('/reports', 'admin.placeholder', [
-        'pageTitle' => 'Laporan Eksekutif'
-    ])->name('admin.reports');
 });
+
+// Daftar Harga (P-03 / Aisyah)
+Route::get('/daftar-harga', [HargaSampahController::class, 'index'])
+    ->middleware('auth')
+    ->name('admin.harga.index');
